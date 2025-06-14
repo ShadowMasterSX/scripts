@@ -85,7 +85,7 @@ run_cmd "apt update && apt -y upgrade" "System updated"
 
 # Step 2: Main packages
 print_box "📦 Installing main packages"
-run_cmd "apt -y install mc screen htop openjdk-11-jre mono-complete exim4 p7zip-full libpcap-dev curl wget ipset net-tools tzdata ntpdate mariadb-server mariadb-client" "Main packages installed"
+run_cmd "apt -y install mc screen htop default-jdk mono-complete exim4 p7zip-full libpcap-dev curl wget ipset net-tools tzdata ntpdate mariadb-server mariadb-client" "Main packages installed"
 
 # Step 3: Dev dependencies
 print_box "🔧 Installing development dependencies"
