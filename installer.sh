@@ -99,7 +99,7 @@ run_cmd "apt -y install pkg-config" "pkg-config installiert"
 
 # Step 6: DB libraries
 print_box "📚 Installing DB libraries"
-run_cmd "apt -y install libdb++-dev libdb-dev libdb5.3 libdb5.3++ libdb5.3++-dev libdb5.3-dbg libdb5.3-dev libmariadb-dev-compat:i386 libmariadb-dev:i386 libmariadb-dev libmariadb-dev-compat" "DB libraries (64bit) installed"
+run_cmd "apt -y install libdb++-dev libdb-dev libdb5.3 libdb5.3++ libdb5.3++-dev libdb5.3-dbg libdb5.3-dev libmariadb-dev libmariadb-dev-compat" "DB libraries (64bit) installed"
 
 # Step 4: Build OpenSSL 1.1.1u
 print_box "🔐 Building OpenSSL 1.1.1u"
