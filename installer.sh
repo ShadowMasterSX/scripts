@@ -89,49 +89,51 @@ run_cmd "apt -y install mc screen strace htop default-jdk mono-complete exim4 p7
 
 # Step 3: Dev dependencies
 print_box "🔧 Installing development dependencies"
-run_cmd "apt -y install build-essential gcc g++ make cmake libpcap-dev" "Build-Tools installiert"
-run_cmd "apt -y install gcc-multilib g++-multilib libc6-dev libc6-dev-i386" "Multilib-Unterstützung installiert"
-run_cmd "apt -y install libssl-dev libssl-dev:i386 libstdc++6 libstdc++6:i386" "Standardbibliotheken installiert"
-run_cmd "apt -y install libcurl4 libcurl4:i386 libcurl4-gnutls-dev" "libcurl installiert"
-run_cmd "apt -y install zlib1g-dev zlib1g-dev:i386" "zlib installiert"
-run_cmd "apt -y install libncurses5-dev libncurses5-dev:i386" "ncurses installiert"
-run_cmd "apt -y install pkg-config" "pkg-config installiert"
+run_cmd "apt -y install build-essential gcc g++ make cmake libpcap-dev libjsoncpp25:i386 libjsoncpp-dev:i386 libjsoncpp25 libjsoncpp-dev libpcre3 libpcre3:i386" "Build-Tools installed"
+run_cmd "apt -y install gcc-multilib g++-multilib libc6-dev libc6-dev-i386" "Multilib-Unterstützung installed"
+run_cmd "apt -y install libssl-dev libssl-dev:i386 libstdc++6 libstdc++6:i386" "Standardbibliotheken installed"
+run_cmd "apt -y install libcurl4 libcurl4:i386 libcurl4-gnutls-dev" "libcurl installed"
+run_cmd "apt -y install zlib1g-dev zlib1g-dev:i386" "zlib installed"
+run_cmd "apt -y install libncurses5-dev libncurses5-dev:i386" "ncurses installed"
+run_cmd "apt -y install pkg-config" "pkg-config installed"
 
 # Step 6: DB libraries
 print_box "📚 Installing DB libraries"
-run_cmd "apt -y install libdb++-dev libdb-dev libdb5.3 libdb5.3++ libdb5.3++-dev libdb5.3-dbg libdb5.3-dev libmariadb-dev libmariadb-dev-compat" "DB libraries (64bit) installed"
+run_cmd "apt -y install libdb++-dev libdb-dev libdb5.3 libdb5.3++ libdb5.3++-dev libdb5.3-dbg libdb5.3-dev libmariadb-dev libmariadb-dev-compat" "DB libraries installed"
 
 # Step 4: Build OpenSSL 1.1.1u
 print_box "🔐 Building OpenSSL 1.1.1u"
-run_cmd "cd /opt/"
-run_cmd "wget https://www.openssl.org/source/openssl-1.1.1u.tar.gz && \
-tar xvf openssl-1.1.1u.tar.gz && \
-cd openssl-1.1.1u && \
-./config --prefix=/opt/openssl-1.1 --openssldir=/opt/openssl-1.1 shared && \
-make && \
-make install && \
-LD_LIBRARY_PATH=/opt/openssl-1.1/lib && \
-echo '/opt/openssl-1.1/lib' > /etc/ld.so.conf.d/openssl-1.1.conf && \
-ldconfig" "OpenSSL 1.1.1u installed and configured"
+run_cmd "cd /opt/" "✅"
+run_cmd "wget https://www.openssl.org/source/openssl-1.1.1u.tar.gz" "✅"
+run_cmd "tar xvf openssl-1.1.1u.tar.gz" "✅"
+run_cmd "cd openssl-1.1.1u" "✅"
+run_cmd "./config --prefix=/opt/openssl-1.1 --openssldir=/opt/openssl-1.1 shared" "✅"
+run_cmd "make -j6" "✅"
+run_cmd "make install" "✅"
+run_cmd "LD_LIBRARY_PATH=/opt/openssl-1.1/lib" "✅"
+run_cmd "echo '/opt/openssl-1.1/lib' > /etc/ld.so.conf.d/openssl-1.1.conf" "✅"
+run_cmd "ldconfig" "OpenSSL 1.1.1u installed and configured" "✅ Openssl installed"
 
 # Step 5: JSONCPP fix
-run_cmd" JSONCPP_VERSION=$(ldconfig -p | grep libjsoncpp | grep -oP 'libjsoncpp\.so\.\K[0-9]+' | head -n1)" "detect libjsoncpp "
-run_cmd "ln -sf /usr/lib/x86_64-linux-gnu/libjsoncpp.so.${JSONCPP_VERSION} /usr/lib/x86_64-linux-gnu/libjsoncpp.so.24" "Fix libjsoncpp.so.24 sucess"
+JSONCPP_VERSION=$(ldconfig -p | grep libjsoncpp | grep -oP 'libjsoncpp\.so\.\K[0-9]+' | head -n1)
+run_cmd "echo Detected libjsoncpp version: $JSONCPP_VERSION" "detect libjsoncpp" "✅"
+run_cmd "ln -sf /usr/lib/x86_64-linux-gnu/libjsoncpp.so.${JSONCPP_VERSION} /usr/lib/x86_64-linux-gnu/libjsoncpp.so.24" "Fix libjsoncpp.so.24 success"
+run_cmd "run_cmd "ldconfig""
 
 # Step 7: Other dependencies
 print_box "➕ Additional dependencies"
-run_cmd "apt -y install libmysqlcppconn-dev libjsoncpp-dev libmariadb-dev-compat curl libcurl4:i386 libcurl4-gnutls-dev" "Additional dependencies installed"
+run_cmd "apt -y install libmysqlcppconn-dev libjsoncpp-dev libmariadb-dev-compat curl libcurl4:i386 libcurl4-gnutls-dev" "✅ Additional dependencies installed"
 
 # Step 8: Apache and PHP
 print_box "🌐 Installing Apache and PHP"
-run_cmd "apt -y install apache2 php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip" "Apache and PHP installed"
-run_cmd "systemctl restart apache2" "Apache restarted"
+run_cmd "apt -y install apache2 php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip" "✅ Apache and PHP installed"
+run_cmd "systemctl restart apache2" "✅ Apache restarted"
 
 # Step 9: Adminer
 print_box "📁 Installing Adminer"
-run_cmd "wget -O /var/www/html/adminer.php https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php" "Adminer downloaded"
-run_cmd "chown www-data:www-data /var/www/html/adminer.php" "Permissions set"
-run_cmd "chmod 755 /var/www/html/adminer.php" "Permissions applied"
+run_cmd "wget -O /var/www/html/adminer.php https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php" "✅ Adminer downloaded"
+run_cmd "chown www-data:www-data /var/www/html/adminer.php" "✅ Permissions set"
+run_cmd "chmod 755 /var/www/html/adminer.php" "✅ Permissions applied"
 
 # Step 10: MySQL configuration
 print_box "🛡 Checking MySQL configuration"
