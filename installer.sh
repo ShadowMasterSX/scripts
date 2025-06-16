@@ -85,14 +85,25 @@ run_cmd "apt update && apt -y upgrade" "System updated"
 
 # Step 2: Main packages
 print_box "📦 Installing main packages"
-run_cmd "apt -y install mc screen htop default-jdk mono-complete exim4 p7zip-full libpcap-dev curl wget ipset net-tools tzdata ntpdate mariadb-server mariadb-client" "Main packages installed"
+run_cmd "apt -y install mc screen strace htop default-jdk mono-complete exim4 p7zip-full curl wget mariadb-server mariadb-client" "Main packages installed"
 
 # Step 3: Dev dependencies
 print_box "🔧 Installing development dependencies"
-run_cmd "apt -y install make gcc g++ libssl-dev libcrypto++-dev libpcre3 libpcre3-dev libtesseract-dev libx11-dev gcc-multilib libc6-dev:i386 build-essential g++-multilib libtemplate-plugin-xml-perl libxml2-dev libstdc++6:i386" "Development dependencies installed"
+run_cmd "apt -y install build-essential gcc g++ make cmake libpcap-dev" "Build-Tools installiert"
+run_cmd "apt -y install gcc-multilib g++-multilib libc6-dev libc6-dev-i386" "Multilib-Unterstützung installiert"
+run_cmd "apt -y install libssl-dev libssl-dev:i386 libstdc++6 libstdc++6:i386" "Standardbibliotheken installiert"
+run_cmd "apt -y install libcurl4 libcurl4:i386 libcurl4-gnutls-dev" "libcurl installiert"
+run_cmd "apt -y install zlib1g-dev zlib1g-dev:i386" "zlib installiert"
+run_cmd "apt -y install libncurses5-dev libncurses5-dev:i386" "ncurses installiert"
+run_cmd "apt -y install pkg-config" "pkg-config installiert"
+
+# Step 6: DB libraries
+print_box "📚 Installing DB libraries"
+run_cmd "apt -y install libdb++-dev libdb-dev libdb5.3 libdb5.3++ libdb5.3++-dev libdb5.3-dbg libdb5.3-dev libmariadb-dev-compat:i386 libmariadb-dev:i386 libmariadb-dev libmariadb-dev-compat" "DB libraries (64bit) installed"
 
 # Step 4: Build OpenSSL 1.1.1u
 print_box "🔐 Building OpenSSL 1.1.1u"
+run_cmd "cd /opt/"
 run_cmd "wget https://www.openssl.org/source/openssl-1.1.1u.tar.gz && \
 tar xvf openssl-1.1.1u.tar.gz && \
 cd openssl-1.1.1u && \
@@ -104,12 +115,8 @@ echo '/opt/openssl-1.1/lib' > /etc/ld.so.conf.d/openssl-1.1.conf && \
 ldconfig" "OpenSSL 1.1.1u installed and configured"
 
 # Step 5: JSONCPP fix
-run_cmd "ln -s /usr/lib/x86_64-linux-gnu/libjsoncpp.so.26 /usr/lib/x86_64-linux-gnu/libjsoncpp.so.24" "linking libjsoncpp.so.24 successful"
-run_cmd "ldconfig" "Library cache updated"
-
-# Step 6: DB libraries
-print_box "📚 Installing DB libraries"
-run_cmd "apt -y install libdb++-dev libdb-dev libdb5.3 libdb5.3++ libdb5.3++-dev libdb5.3-dbg libdb5.3-dev" "DB libraries (64bit) installed"
+run_cmd" JSONCPP_VERSION=$(ldconfig -p | grep libjsoncpp | grep -oP 'libjsoncpp\.so\.\K[0-9]+' | head -n1)" "detect libjsoncpp "
+run_cmd "ln -sf /usr/lib/x86_64-linux-gnu/libjsoncpp.so.${JSONCPP_VERSION} /usr/lib/x86_64-linux-gnu/libjsoncpp.so.24" "Fix libjsoncpp.so.24 sucess"
 
 # Step 7: Other dependencies
 print_box "➕ Additional dependencies"
