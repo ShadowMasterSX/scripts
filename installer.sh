@@ -89,9 +89,9 @@ run_cmd "apt -y install make mc screen strace htop default-jdk mono-complete exi
 
 # Step 3: Dev dependencies
 print_box "🔧 Installing development dependencies"
-run_cmd "apt -y install build-essential gcc g++ make cmake libpcap-dev libjsoncpp25:i386 libjsoncpp-dev:i386 libjsoncpp25 libjsoncpp-dev libpcre3 libpcre3:i386" "Build-Tools installed"
-run_cmd "apt -y install gcc-multilib g++-multilib libc6-dev libc6-dev-i386" "Multilib-Unterstützung installed"
-run_cmd "apt -y install libssl-dev libssl-dev:i386 libstdc++6 libstdc++6:i386" "Standardbibliotheken installed"
+run_cmd "apt -y install build-essential gcc g++ make cmake libpcap-dev libjsoncpp-dev libpcre3" "Build-Tools installed"
+run_cmd "apt -y install gcc-multilib g++-multilib libc6-dev" "Multilib-Unterstützung installed"
+run_cmd "apt -y install libssl-dev libstdc++6" "Standardbibliotheken installed"
 run_cmd "apt -y install libcurl4 libcurl4:i386 libcurl4-gnutls-dev" "libcurl installed"
 run_cmd "apt -y install zlib1g-dev zlib1g-dev:i386" "zlib installed"
 run_cmd "apt -y install libncurses5-dev libncurses5-dev:i386" "ncurses installed"
@@ -103,20 +103,20 @@ run_cmd "apt -y install libdb++-dev libdb-dev libdb5.3 libdb5.3++ libdb5.3++-dev
 
 # Step 4: Build OpenSSL 1.1.1u
 print_box "🔐 Building OpenSSL 1.1.1u"
-run_cmd "cd /opt/" "✅"
-run_cmd "wget https://www.openssl.org/source/openssl-1.1.1u.tar.gz" "✅"
-run_cmd "tar xvf openssl-1.1.1u.tar.gz" "✅"
-run_cmd "cd openssl-1.1.1u" "✅"
-run_cmd "./config --prefix=/opt/openssl-1.1 --openssldir=/opt/openssl-1.1 shared" "✅"
-run_cmd "make -j6" "✅"
-run_cmd "make install" "✅"
-run_cmd "LD_LIBRARY_PATH=/opt/openssl-1.1/lib" "✅"
-run_cmd "echo '/opt/openssl-1.1/lib' > /etc/ld.so.conf.d/openssl-1.1.conf" "✅"
-run_cmd "ldconfig" "OpenSSL 1.1.1u installed and configured" "✅ Openssl installed"
+run_cmd "cd /opt/"
+run_cmd "wget https://www.openssl.org/source/openssl-1.1.1u.tar.gz"
+run_cmd "tar xvf openssl-1.1.1u.tar.gz"
+run_cmd "cd openssl-1.1.1u"
+run_cmd "./config --prefix=/opt/openssl-1.1 --openssldir=/opt/openssl-1.1 shared"
+run_cmd "make"
+run_cmd "make install"
+run_cmd "LD_LIBRARY_PATH=/opt/openssl-1.1/lib"
+run_cmd "echo '/opt/openssl-1.1/lib' > /etc/ld.so.conf.d/openssl-1.1.conf"
+run_cmd "ldconfig" "OpenSSL 1.1.1u installed and configured" "✅ Openssl 1.1 installed"
 
 # Step 5: JSONCPP fix
 JSONCPP_VERSION=$(ldconfig -p | grep libjsoncpp | grep -oP 'libjsoncpp\.so\.\K[0-9]+' | head -n1)
-run_cmd "echo Detected libjsoncpp version: $JSONCPP_VERSION" "detect libjsoncpp" "✅"
+run_cmd "echo Detected libjsoncpp version: $JSONCPP_VERSION" "detect libjsoncpp" "✅ $JSONCPP_VERSION detect"
 run_cmd "ln -sf /usr/lib/x86_64-linux-gnu/libjsoncpp.so.${JSONCPP_VERSION} /usr/lib/x86_64-linux-gnu/libjsoncpp.so.24" "Fix libjsoncpp.so.24 success"
 run_cmd "run_cmd "ldconfig""
 
