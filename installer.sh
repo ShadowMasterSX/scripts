@@ -85,7 +85,7 @@ run_cmd "apt update && apt -y upgrade" "System updated"
 
 # Step 2: Main packages
 print_box "📦 Installing main packages"
-run_cmd "apt -y install mc screen strace htop default-jdk mono-complete exim4 p7zip-full curl wget mariadb-server mariadb-client" "Main packages installed"
+run_cmd "apt -y install make mc screen strace htop default-jdk mono-complete exim4 p7zip-full curl wget mariadb-server mariadb-client" "Main packages installed"
 
 # Step 3: Dev dependencies
 print_box "🔧 Installing development dependencies"
