@@ -125,12 +125,6 @@ print_box "🌐 Installing Apache and PHP"
 run_cmd "apt -y install apache2 php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip" "Apache and PHP installed"
 run_cmd "systemctl restart apache2" "Apache restarted"
 
-# Step 9: PhpMyAdmin Installation
-print_box "📁 Installing phpMyAdmin"
-run_cmd "apt -y install phpmyadmin" "phpMyAdmin installed"
-run_cmd "ln -sf /usr/share/phpmyadmin /var/www/html/phpmyadmin" "phpMyAdmin linked to /var/www/html/phpmyadmin"
-run_cmd "chown -R www-data:www-data /usr/share/phpmyadmin" "phpMyAdmin permissions set"
-run_cmd "systemctl reload apache2" "Apache reloaded for phpMyAdmin"
 
 # Step 10: MySQL secure installation and user setup
 print_box "🛡 Running mysql_secure_installation & Creating non-root user"
@@ -173,8 +167,8 @@ done
 # Step 11: Info for phpMyAdmin
 print_box "✅ INSTALLATION FINISHED"
 SERVER_IP=$(hostname -I | awk '{print $1}')
-echo -e "${CYAN}phpMyAdmin is now available at: http://${SERVER_IP}/phpmyadmin"
-echo -e "Login with:"
+echo -e "${CYAN}website is is now available at: http://${SERVER_IP}/"
+echo -e "MySQL data:"
 echo -e "  Username: ${MYSQL_NEW_USER}"
 echo -e "  Password: (the password you chose)${RESET}"
-echo -e "Root login via phpMyAdmin is disabled/restricted for security."
+echo -e "Root login via Databasae is disabled/restricted for security."
